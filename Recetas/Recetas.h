@@ -76,6 +76,8 @@ namespace Recetas {
             nivelDificultad = _nivelDificultad;
             categoria = _categoria;
             origen = _origen;
+            valorNutricional = 0; // Inicializamos valorNutricional
+            cabeza = nullptr; // Inicializamos cabeza
         }; // Constructor con parámetros
         ~receta() {}; // Destructor
 
@@ -91,6 +93,7 @@ namespace Recetas {
                 }
                 aux->sig = nuevo;
             }
+            valorNutricional += nuevo->valorNutricional;
         }; // Método para insertar un ingrediente en la lista de ingredientes de la receta
 
         void borrarIngrediente(int _id) {
@@ -98,6 +101,7 @@ namespace Recetas {
                 if (cabeza->id == _id) {
                     Nodo^ aux = cabeza;
                     cabeza = cabeza->sig;
+                    valorNutricional -= aux->valorNutricional;
                     delete aux;
                 }
                 else {
@@ -108,6 +112,7 @@ namespace Recetas {
                     if (aux->sig != nullptr) {
                         Nodo^ aux2 = aux->sig;
                         aux->sig = aux2->sig;
+                        valorNutricional -= aux2->valorNutricional;
                         delete aux2;
                     }
                 }
@@ -116,14 +121,15 @@ namespace Recetas {
 
         void mostrarIngredientes(Nodo^ nodo, System::Windows::Forms::ListBox^ listBox) {
             if (nodo != nullptr) {
-                listBox->Items->Add(nodo->id + " " + nodo->nombre + " " + nodo->estado + " " + nodo->origen + " " + nodo->valorNutricional + " " + nodo->cantidad + " " + nodo->unidadMedida);
+                listBox->Items->Add("ID: " + nodo->id + "    Nombre: " + nodo->nombre + "    Estado: " + nodo->estado + "    Origen: " + nodo->origen + "    Valor Nutricional: " + nodo->valorNutricional + "    Cantidad: " + nodo->cantidad + "    Unidad de Medida: " + nodo->unidadMedida);
                 mostrarIngredientes(nodo->sig, listBox);
+                
             }
         }; // Método para mostrar los ingredientes de la receta
     };
 
     public ref class Multilista {
-    private:
+    public:
         List<receta^>^ multilista; // Vector de punteros a Nodo para almacenar la multilista
 
     public:
@@ -132,7 +138,7 @@ namespace Recetas {
         }; // Constructor
         ~Multilista() {}; // Destructor
 
-        void borrarLista(receta^ Receta) {
+        void eliminarReceta(receta^ Receta) {
             if (Receta != nullptr) {
                 multilista->Remove(Receta);
             }

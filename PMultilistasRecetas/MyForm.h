@@ -98,6 +98,7 @@ namespace PMultilistasRecetas {
 
 	private:
 		Multilista^ multilista = gcnew Multilista();
+		int indice=0;
 		/// <summary>
 		/// Variable del diseñador necesaria.
 		/// </summary>
@@ -459,6 +460,7 @@ namespace PMultilistasRecetas {
 			this->textBox21->Name = L"textBox21";
 			this->textBox21->Size = System::Drawing::Size(123, 22);
 			this->textBox21->TabIndex = 46;
+			this->textBox21->TextChanged += gcnew System::EventHandler(this, &MyForm::textBox21_TextChanged);
 			// 
 			// textBox22
 			// 
@@ -475,6 +477,7 @@ namespace PMultilistasRecetas {
 			this->button1->TabIndex = 48;
 			this->button1->Text = L"Limpiar";
 			this->button1->UseVisualStyleBackColor = true;
+			this->button1->Click += gcnew System::EventHandler(this, &MyForm::button1_Click);
 			// 
 			// button2
 			// 
@@ -494,6 +497,7 @@ namespace PMultilistasRecetas {
 			this->button3->TabIndex = 50;
 			this->button3->Text = L"Eliminar";
 			this->button3->UseVisualStyleBackColor = true;
+			this->button3->Click += gcnew System::EventHandler(this, &MyForm::button3_Click);
 			// 
 			// button4
 			// 
@@ -503,6 +507,7 @@ namespace PMultilistasRecetas {
 			this->button4->TabIndex = 51;
 			this->button4->Text = L"Primero";
 			this->button4->UseVisualStyleBackColor = true;
+			this->button4->Click += gcnew System::EventHandler(this, &MyForm::button4_Click);
 			// 
 			// button5
 			// 
@@ -522,6 +527,7 @@ namespace PMultilistasRecetas {
 			this->button6->TabIndex = 53;
 			this->button6->Text = L"Sucesor ->";
 			this->button6->UseVisualStyleBackColor = true;
+			this->button6->Click += gcnew System::EventHandler(this, &MyForm::button6_Click);
 			// 
 			// button7
 			// 
@@ -531,6 +537,7 @@ namespace PMultilistasRecetas {
 			this->button7->TabIndex = 54;
 			this->button7->Text = L"Ultimo";
 			this->button7->UseVisualStyleBackColor = true;
+			this->button7->Click += gcnew System::EventHandler(this, &MyForm::button7_Click);
 			// 
 			// button8
 			// 
@@ -540,6 +547,7 @@ namespace PMultilistasRecetas {
 			this->button8->TabIndex = 55;
 			this->button8->Text = L"Insertar";
 			this->button8->UseVisualStyleBackColor = true;
+			this->button8->Click += gcnew System::EventHandler(this, &MyForm::button8_Click);
 			// 
 			// button9
 			// 
@@ -549,6 +557,7 @@ namespace PMultilistasRecetas {
 			this->button9->TabIndex = 56;
 			this->button9->Text = L"Eliminar";
 			this->button9->UseVisualStyleBackColor = true;
+			this->button9->Click += gcnew System::EventHandler(this, &MyForm::button9_Click);
 			// 
 			// listBox1
 			// 
@@ -566,6 +575,7 @@ namespace PMultilistasRecetas {
 			this->label11->Name = L"label11";
 			this->label11->Size = System::Drawing::Size(100, 23);
 			this->label11->TabIndex = 58;
+			this->label11->Click += gcnew System::EventHandler(this, &MyForm::label11_Click);
 			// 
 			// MyForm
 			// 
@@ -643,11 +653,28 @@ private: System::Void label22_Click(System::Object^ sender, System::EventArgs^ e
 private: System::Void label21_Click(System::Object^ sender, System::EventArgs^ e) {
 }
 private: System::Void button5_Click(System::Object^ sender, System::EventArgs^ e) {
+	//antecesor
+	if(indice>0){
+		indice--;
+		receta^ aux = multilista->multilista[indice];
+		textBox1->Text = aux->identificador.ToString();
+		textBox2->Text = aux->porciones;
+		textBox3->Text = aux->nombre;
+		textBox4->Text = aux->nivelDificultad;
+		textBox5->Text = aux->tiempoPreparacion;
+		textBox6->Text = aux->categoria;
+		textBox7->Text = aux->tiempoCoccion;
+		textBox8->Text = aux->origen;
+		listBox1->Items->Clear();
+		aux->mostrarIngredientes(aux->cabeza, listBox1);
+		label11->Text = aux->valorNutricional.ToString();
+	}
+	
 }
 private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
 
 	//insertar receta
-	int id = Convert::ToInt32(textBox1->Text);
+	int identificador = Convert::ToInt32(textBox1->Text);
 	String^ nombre = textBox3->Text;
 	String^ tiempoPreparacion = textBox5->Text;
 	String^ tiempoCoccion = textBox7->Text;
@@ -656,11 +683,118 @@ private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e
 	String^ categoria = textBox6->Text;
 	String^ origen = textBox8->Text;
 
-	multilista->insertarReceta(id, nombre, tiempoPreparacion, tiempoCoccion, porciones, nivelDificultad, categoria, origen);
+	multilista->insertarReceta(identificador, nombre, tiempoPreparacion, tiempoCoccion, porciones, nivelDificultad, categoria, origen);
 }
 private: System::Void textBox1_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+
 }
 private: System::Void textBox3_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+
+}
+private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e) {
+
+	int identificador = Convert::ToInt32(textBox1->Text);
+	receta^ auxReceta = multilista->buscarReceta(identificador);
+	if (auxReceta != nullptr) {
+		multilista->eliminarReceta(auxReceta);
+	}
+}
+private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
+	textBox1->Text = "";
+	textBox2->Text = "";
+	textBox3->Text = "";
+	textBox4->Text = "";
+	textBox5->Text = "";
+	textBox6->Text = "";
+	textBox7->Text = "";
+	textBox8->Text = "";
+	textBox13->Text = "";
+	textBox14->Text = "";
+	textBox15->Text = "";
+	textBox16->Text = "";
+	textBox18->Text = "";
+	textBox21->Text = "";
+	textBox22->Text = "";
+}
+private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e) {
+	receta^ aux=multilista->multilista[0];
+	textBox1->Text = aux->identificador.ToString();
+	textBox2->Text = aux->porciones;
+	textBox3->Text = aux->nombre;
+	textBox4->Text = aux->nivelDificultad;
+	textBox5->Text = aux->tiempoPreparacion;
+	textBox6->Text = aux->categoria;
+	textBox7->Text = aux->tiempoCoccion;
+	textBox8->Text = aux->origen;
+	listBox1->Items->Clear();
+	aux->mostrarIngredientes(aux->cabeza, listBox1);
+	label11->Text = aux->valorNutricional.ToString();
+
+}
+private: System::Void button8_Click(System::Object^ sender, System::EventArgs^ e) {
+	//insertar ingrediente
+	receta^ auxReceta = multilista->buscarReceta(Convert::ToInt32(textBox1->Text));
+	if(auxReceta!=nullptr){
+		listBox1->Items->Clear();
+		int identificador = Convert::ToInt32(textBox13->Text);
+		String^ nombre = textBox14->Text;
+		String^ estado = textBox15->Text;
+		String^ origen = textBox16->Text;
+		int valorNutricional = Convert::ToInt32(textBox18->Text);
+		int cantidad = Convert::ToInt32(textBox21->Text);
+		String^ unidadMedida = textBox22->Text;
+
+		auxReceta->insertarIngrediente(identificador, nombre, estado, origen, valorNutricional,cantidad,unidadMedida);
+		
+		auxReceta->mostrarIngredientes(auxReceta->cabeza,listBox1);
+		label11->Text = auxReceta->valorNutricional.ToString();
+
+	}
+}
+private: System::Void textBox21_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void button7_Click(System::Object^ sender, System::EventArgs^ e) {
+	receta^ aux = multilista->multilista[multilista->multilista->Count - 1];
+	textBox1->Text = aux->identificador.ToString();
+	textBox2->Text = aux->porciones;
+	textBox3->Text = aux->nombre;
+	textBox4->Text = aux->nivelDificultad;
+	textBox5->Text = aux->tiempoPreparacion;
+	textBox6->Text = aux->categoria;
+	textBox7->Text = aux->tiempoCoccion;
+	textBox8->Text = aux->origen;
+	listBox1->Items->Clear();
+	label11->Text = aux->valorNutricional.ToString();
+	aux->mostrarIngredientes(aux->cabeza, listBox1);
+	}
+private: System::Void button6_Click(System::Object^ sender, System::EventArgs^ e) {
+	if (indice<multilista->multilista->Count-1){
+		indice++;
+		receta^ aux = multilista->multilista[indice];
+		textBox1->Text = aux->identificador.ToString();
+		textBox2->Text = aux->porciones;
+		textBox3->Text = aux->nombre;
+		textBox4->Text = aux->nivelDificultad;
+		textBox5->Text = aux->tiempoPreparacion;
+		textBox6->Text = aux->categoria;
+		textBox7->Text = aux->tiempoCoccion;
+		textBox8->Text = aux->origen;
+		listBox1->Items->Clear();
+		aux->mostrarIngredientes(aux->cabeza, listBox1);
+		label11->Text = aux->valorNutricional.ToString();
+	}
+
+}
+private: System::Void label11_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void button9_Click(System::Object^ sender, System::EventArgs^ e) {
+	receta^ auxReceta = multilista->buscarReceta(Convert::ToInt32(textBox1->Text));
+	if (auxReceta != nullptr) {
+		listBox1->Items->Clear();
+		auxReceta->borrarIngrediente(Convert::ToInt32(textBox13->Text));
+		auxReceta->mostrarIngredientes(auxReceta->cabeza, listBox1);
+		label11->Text = auxReceta->valorNutricional.ToString();
+	}
 }
 };
 }
